@@ -6,7 +6,7 @@ const debugColor = require('debug')('TuyAPI:device:color');
 
 /**
  *
-    var steckdose = new TuyaDevice({
+ var steckdose = new TuyaDevice({
         id: '03200240600194781244',
         key: 'b8bdebab418f5b55',
         ip: '192.168.178.45',
@@ -69,7 +69,10 @@ var TuyaDevice = (function () {
 
         this.device.on('data', data => {
             if (typeof data == "string") {
+                this.disconnect(function (){});
+                this.connected=false;
                 debugError('Data from device not encrypted:', data.replace(/[^a-zA-Z0-9 ]/g, ""));
+
             } else {
                 debug('Data from device:', data);
                 device.triggerAll('data', data);
@@ -160,6 +163,11 @@ var TuyaDevice = (function () {
                     debug("set completed ");
                     resolve(result);
                 });
+            }, function (err) {
+                debugError("Error reset devices");
+                this.disconnect(function (){});
+                this.connected=false;
+                debugError(err);
             });
         });
     }
