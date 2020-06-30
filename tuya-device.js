@@ -164,8 +164,13 @@ var TuyaDevice = (function () {
                     resolve(result);
                 });
             }, function (err) {
-                debugError("Error reset devices");
-                this.disconnect(function (){});
+                debug("Error reset devices");
+                try{
+                    this.disconnect(function (){});
+                }
+                catch (error){
+                    debug("disconnect - Error reset devices");
+                }
                 this.connected=false;
                 debugError(err);
             });
